@@ -1,0 +1,14 @@
+name: enzywizard-dock
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.10
+  - rdkit=2026.3.1
+  - vina=1.2.6
+  - meeko=0.7.1
+  - numpy=1.23.5
+  - biopython=1.86
+  - msms=2.6.1
+  - bio-pyvol=1.7.8
+prefix: /home/wmk/miniconda3/envs/enzywizard-dock

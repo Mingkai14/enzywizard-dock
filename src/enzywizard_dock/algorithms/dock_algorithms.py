@@ -615,8 +615,8 @@ def save_docking_results_and_generate_dock_report(
         if len(docking_result_list) == 0:
             logger.print("[WARNING] No docking results to save.")
             return {
-                "output_type": "enzywizard_dock",
-                "docked_result": {},
+                "report_type": "enzywizard_dock",
+                "enzyme_substrate_docking_result": {},
             }
 
         docking_result = docking_result_list[0]

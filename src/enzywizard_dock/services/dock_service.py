@@ -23,8 +23,8 @@ def _parse_float_triplet(value: str, parameter_name: str, logger: Logger) -> Lis
 
     try:
         return [float(x) for x in part_list]
-    except Exception:
-        logger.print(f"[ERROR] {parameter_name} must contain numeric values.")
+    except Exception as e:
+        logger.print(f"[ERROR] {parameter_name} must contain numeric values. Reason: {e}")
         return None
 
 
@@ -35,7 +35,7 @@ def run_dock_service(
     output_dir: str | Path,
     max_docking_attempt_num: int = 20,
     early_stop: bool = False,
-    exhaustiveness: int = 16,
+    exhaustiveness: int = 8,
     cpu: int = 0,
     min_rad: float = 1.8,
     max_rad: float = 6.2,
@@ -157,7 +157,11 @@ def run_dock_service(
     json_name = f"dock_report_{name}_{substrate_names}.json"
     json_name = get_optimized_filename(json_name)
     json_report_path = output_dir / json_name
-    write_json_from_dict_inline_leaf_lists(report, json_report_path)
+    try:
+        write_json_from_dict_inline_leaf_lists(report, json_report_path)
+    except Exception as e:
+        logger.print(f"[ERROR] Failed to write report JSON to {json_report_path}: {e}")
+        return False
     logger.print(f"[INFO] Report JSON saved: {json_report_path}")
 
     logger.print("[INFO] Dock processing finished")

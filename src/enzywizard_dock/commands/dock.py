@@ -1,5 +1,6 @@
 from __future__ import annotations
 from argparse import Namespace, ArgumentParser
+import sys
 from ..services.dock_service import run_dock_service
 
 
@@ -11,7 +12,7 @@ def add_dock_parser(parser: ArgumentParser) -> None:
     parser.add_argument("--max_docking_attempt_num",type=int,default=20,help="Maximum number of docking attempts (default: 20).")
     parser.add_argument("--no_early_stop", action="store_false", dest="early_stop",help="Disable stopping immediately after the first successful docking result (default: enabled).")
     parser.set_defaults(early_stop=True)
-    parser.add_argument("--exhaustiveness",type=int,default=16,help="Exhaustiveness of AutoDock Vina search (default: 16). Larger values may improve docking search coverage but increase runtime.")
+    parser.add_argument("--exhaustiveness",type=int,default=8,help="Exhaustiveness of AutoDock Vina search (default: 8). Larger values may improve docking search coverage but increase runtime.")
     parser.add_argument("--cpu",type=int,default=0,help="Number of CPUs used by AutoDock Vina (default: 0). A value of 0 lets Vina decide automatically.")
     parser.add_argument("--min_rad",type=float,default=1.8,help="Minimum probe radius used in pocket detection (default: 1.8). Smaller values may detect narrower cavities, but overly small values may cause PyVOL/MSMS failure.")
     parser.add_argument("--max_rad",type=float,default=6.2,help="Maximum probe radius used in pocket detection (default: 6.2). Larger values may detect broader cavities, but overly large values may cause PyVOL/MSMS failure.")
@@ -24,7 +25,7 @@ def add_dock_parser(parser: ArgumentParser) -> None:
 
 
 def run_dock(args: Namespace) -> None:
-    run_dock_service(
+    success = run_dock_service(
         input_path=args.input_path,
         substrate_names=args.substrate_names,
         substrate_dir=args.substrate_dir,
@@ -40,3 +41,5 @@ def run_dock(args: Namespace) -> None:
         catalytic_site_coord=args.catalytic_site_coord,
         box_size=args.box_size,
     )
+    if not success:
+        sys.exit(1)
